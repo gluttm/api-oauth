@@ -5255,6 +5255,21 @@ module.exports = {
 
 /***/ }),
 
+/***/ "./common.js":
+/*!*******************!*\
+  !*** ./common.js ***!
+  \*******************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "apiUrl": () => (/* binding */ apiUrl)
+/* harmony export */ });
+var apiUrl = 'http://localhost/laravel-oauth/api-and-auth/public/';
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/views/Dashboard.vue?vue&type=script&lang=js&":
 /*!***********************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/views/Dashboard.vue?vue&type=script&lang=js& ***!
@@ -5268,6 +5283,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _common__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../common */ "./common.js");
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -5303,19 +5327,23 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 
+
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  props: ['access_token'],
   data: function data() {
     return {
       name: '',
-      redirect_url: '',
-      clients: []
+      redirect_uri: '',
+      clients: [],
+      a_token: this.access_token.access_token,
+      api_url: _common__WEBPACK_IMPORTED_MODULE_1__.apiUrl
     };
   },
   methods: {
     getClients: function getClients() {
       var _this = this;
 
-      axios__WEBPACK_IMPORTED_MODULE_0___default().get('/oauth/clients').then(function (response) {
+      axios__WEBPACK_IMPORTED_MODULE_0___default().get(this.api_url + 'oauth/clients').then(function (response) {
         _this.clients = response.data;
       })["catch"](function (error) {
         console.log('Something Went wrong.');
@@ -5324,22 +5352,13 @@ __webpack_require__.r(__webpack_exports__);
     saveClient: function saveClient() {
       var _this2 = this;
 
-      axios__WEBPACK_IMPORTED_MODULE_0___default().post('/oauth/clients', {
+      axios__WEBPACK_IMPORTED_MODULE_0___default().post(this.api_url + 'oauth/clients', {
         name: this.name,
-        redirect: this.redirect_url
+        redirect: this.redirect_uri
       }).then(function (response) {
         _this2.getClients();
 
         _this2.$refs.formClient.reset();
-
-        alert('all good');
-      })["catch"](function (error) {
-        console.log('Something Went wrong.');
-      });
-    },
-    generateToken: function generateToken(info) {
-      axios__WEBPACK_IMPORTED_MODULE_0___default().post('/start-login', info).then(function (response) {
-        console.log('Processing...');
       })["catch"](function (error) {
         console.log('Something Went wrong.');
       });
@@ -27992,8 +28011,8 @@ var render = function () {
                   {
                     name: "model",
                     rawName: "v-model",
-                    value: _vm.redirect_url,
-                    expression: "redirect_url",
+                    value: _vm.redirect_uri,
+                    expression: "redirect_uri",
                   },
                 ],
                 staticClass: "form-control form-control-sm",
@@ -28001,13 +28020,13 @@ var render = function () {
                   placeholder: "http://localhost:9000/callback",
                   type: "text",
                 },
-                domProps: { value: _vm.redirect_url },
+                domProps: { value: _vm.redirect_uri },
                 on: {
                   input: function ($event) {
                     if ($event.target.composing) {
                       return
                     }
-                    _vm.redirect_url = $event.target.value
+                    _vm.redirect_uri = $event.target.value
                   },
                 },
               }),
@@ -28016,6 +28035,40 @@ var render = function () {
             _vm._m(0),
           ]
         ),
+        _vm._v(" "),
+        _vm.a_token
+          ? _c("div", { staticClass: "mt-3" }, [
+              _c("label", { attrs: { for: "" } }, [_vm._v("Access Token")]),
+              _vm._v(" "),
+              _c("textarea", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.a_token,
+                    expression: "a_token",
+                  },
+                ],
+                staticClass: "form-control",
+                attrs: {
+                  disabled: "",
+                  name: "",
+                  id: "",
+                  cols: "30",
+                  rows: "10",
+                },
+                domProps: { value: _vm.a_token },
+                on: {
+                  input: function ($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.a_token = $event.target.value
+                  },
+                },
+              }),
+            ])
+          : _vm._e(),
       ]),
       _vm._v(" "),
       _c(
@@ -28081,6 +28134,25 @@ var render = function () {
                     [_vm._v(_vm._s(client.revoked))]
                   ),
                 ]),
+                _vm._v(" "),
+                _c(
+                  "a",
+                  {
+                    staticClass: "btn btn-info",
+                    attrs: {
+                      href:
+                        "\n                " +
+                        _vm.api_url +
+                        "start-login?client_id=" +
+                        client.id +
+                        "&redirect_uri=" +
+                        client.redirect +
+                        "&response_type=code&scope=&client_secret=" +
+                        client.secret,
+                    },
+                  },
+                  [_vm._v("Generate Token")]
+                ),
               ]
             )
           }),

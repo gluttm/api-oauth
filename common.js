@@ -1,0 +1,1 @@
+export const apiUrl = 'http://localhost/laravel-oauth/api-and-auth/public/'
